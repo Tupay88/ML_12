@@ -16,8 +16,7 @@
 - Verified consolidated output file was created
 - Checked files to verify why some files only loaded 1 sheet
 
- Tested whether the code ran without errors, if consolidated file was created, how many rows and columns in file & processing time <br>
- **Note:** I focused on testing for reproducibility and consolidation. **I did not test for data quality/cleaning. Member 1 or 2 should verify whether the data is clean.**
+ **Note:** I focused on testing for reproducibility and consolidation. I did not test for data quality/cleaning. Member 1 or 2 should verify whether the data is clean.
 
  
 ## Results 
