@@ -16,10 +16,9 @@
 - Verified consolidated output file was created
 - Checked files to verify why some files only loaded 1 sheet
 
- Tested whether the code ran without errors, if consolidated file was created, how many rows and columns in file & processing time
+ Tested whether the code ran without errors, if consolidated file was created, how many rows and columns in file & processing time <br>
  **Note:** I focused on testing for reproducibility and consolidation. **I did not test for data quality/cleaning. Member 1 or 2 should verify whether the data is clean.**
 
- ---
  
 ## Results 
 
@@ -46,7 +45,6 @@
 - Findings: 2022-2024 files correctly have only 1 sheet (annual data).
   However 2025 has 10 sheets but only 1 appears to have been loaded. 9 Months of data is missing.
   
---- 
 
 ## Suggestions
 
@@ -77,7 +75,8 @@ except ImportError:
 - **Member 1:** Add data quality checks to your code (check for missing values, duplicate rows, date issues if not already included)
 - **Member 2:** Verify data quality during EDA and document any issues found
 _ **Member 1:** Please make these changes so that Member 2 can start EDA by Sunday with clean data.
-   
+
+
 ---
 
 ## Review Status
