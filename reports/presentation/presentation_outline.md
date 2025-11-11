@@ -27,9 +27,9 @@ Strengths
 Challenges
 
 ### Slide 5: Results - Key Insights
-data insights
-feature importance (top Predictive features)
-business insights 
+data insights  <br>
+feature importance (top Predictive features) <br>
+business insights  <br>
 business impact (Actionable Recommendations, Estimated Impact)
 
 ### Slide 6: Limitations & Conclusion
