@@ -146,8 +146,8 @@ Based on the consolidated dataset, our data includes:
 - Categorical columns (time, bound): Missing values were filled with the string 'Unknown'.
 - The date column was converted to datetime format with errors='coerce'.
 - The dataset was sorted by date for temporal consistency.
-
-## V. Risks & Limitations 
+---
+## IV. Risks & Limitations 
 **Risks & Limitations:**
 - **Class Imbalance**:  The EDA revealed that most delays are short, but a few severe incidents skew the average, necessitating specialized handling for modeling. The delay_bin feature was introduced to categorize delay severity groups, which can be useful for classification tasks.
 - **Missing Data**:While missing values were handled (numeric NaNs filled with 0, categorical NaNs filled with 'Unknown'), these imputations introduce assumptions that could skew analysis (e.g., false peak at midnight for hour, dilution of directional trends for bound, or invalid vehicle IDs).
@@ -155,7 +155,7 @@ Based on the consolidated dataset, our data includes:
 
 ---
 
-## Methodology
+## V. Methodology
 
 Our analysis followed a structured, milestone-driven approach moving from data consolidation to model deployment:
 
@@ -285,7 +285,7 @@ Our analysis followed a structured, milestone-driven approach moving from data c
 
 ---
 
-## Results
+## VI. Results
 
 This section details the performance of the developed classification models, focusing on the selected Gradient Boosting (GB) model. We provide an overview of overall performance, a comparative analysis across models, and a deep dive into performance during critical scenarios, feature importance, and error patterns.
 
@@ -398,7 +398,7 @@ Analyzing the misclassification patterns of the Gradient Boosting model during n
 
 ---
 
-## Business Impact & Recommendations
+## VII. Business Impact & Recommendations
 
 ### Operational Improvements Enabled
 
@@ -465,7 +465,7 @@ Based on our model's performance and feature importance analysis, TTC can implem
 
 ---
 
-## Limitations & Future Work
+## VIII. Limitations & Future Work
 
 ### Current Limitations
 
@@ -516,7 +516,7 @@ Based on our model's performance and feature importance analysis, TTC can implem
    - Validate the model's generalizability by testing it on incident data from other transit systems.
 
 ---
-## Reproducibility
+## IX. Reproducibility
 
 To ensure full reproducibility of this project, follow the steps below.
 
@@ -606,7 +606,7 @@ Running the full pipeline should produce:
 For issues or questions about reproducibility:
 -   Open a GitHub issue in the repository
 ________________________________________
-##  Team & Collaboration
+##  X. Team & Collaboration
 ### Team Structure
 This project was completed by a 4-member data science team with the following roles:
 **Member 1 - Data Acquisition & Cleaning Lead**
@@ -665,7 +665,7 @@ This project was completed by a 4-member data science team with the following ro
 - [Member 4 Video]
 
 ________________________________________
-## Technologies & Tools
+## XI. Technologies & Tools
 
 ### Programming Language:
 Python 3.9+
@@ -699,7 +699,7 @@ ttc-incident-classification/
 └── README.md                  # This file
 
 ________________________________________
-## References
+## XII. References
 ### Data Source
 Toronto Transit Commission (TTC) Service Delay Data, 2014-2024
 [Add specific data source URL if available]
@@ -707,7 +707,7 @@ Toronto Transit Commission (TTC) Service Delay Data, 2014-2024
 - scikit-learn documentation: https://scikit-learn.org/
 ### Related Work
 ________________________________________
-## Acknowledgments
+## XIII. Acknowledgments
 We thank the Toronto Transit Commission for making this data publicly available, enabling data-driven analysis to improve public transit operations.
 ________________________________________
 Project Timeline: [Start date] - November 14, 2025
@@ -716,15 +716,6 @@ Repository: [GitHub URL]
 License: [If applicable]
 ---
 
-## X. Project Team Members
-
-Member 1: Hossein Hooshmandi Safa - Data Acquisition & Cleaning Lead <br>
-Member 2: Aman Kaushik - EDA & Feature Engineering Lead <br>
-Member 3: Antonio Gao - Model Development & Optimization Lead <br>
-Member 4: Janice Wilson - Evaluation, Visualization & Reporting Lead
-
-Project Start Date: November 4, 2025 <br>
-Showcase Presentation: November 15, 2025
 <br>
 <br>
 
