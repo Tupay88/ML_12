@@ -139,7 +139,7 @@ Based on the consolidated dataset, our data includes:
 - Column names standardized across years
 - Processing time: 45.6 seconds for 93,274 records
 
-**Data Quality Issues:** [PLACEHOLDER - From Member 1 & Member 2]
+**Data Quality Issues:** 
 - Missing values:  time (6), bound (2280), vehicle (4649), and hour (6) had missing values.
 **Data cleaning steps:**
 - Numeric columns (vehicle, hour): Missing values were filled with 0.
@@ -163,7 +163,7 @@ Our analysis followed a structured, milestone-driven approach moving from data c
 
 **Objective:** Create clean, consolidated dataset ready for analysis
 
-**Process:** [PLACEHOLDER - Summarize Member 1's work in 3-4 sentences]
+**Process:** 
 - Loaded 12 Excel/CSV files spanning 2014-2025
 - Standardized column names and data types across years
 - Merged monthly data into single consolidated dataset
@@ -178,7 +178,7 @@ Our analysis followed a structured, milestone-driven approach moving from data c
 
 **Objective:** Understand data patterns and design predictive features
 
-**Key Questions Investigated:** [PLACEHOLDER - From Member 2's notes]
+**Key Questions Investigated:** 
 
 1. **Incident Type Distribution:**
 - 108 distinct incident types identified.
@@ -197,7 +197,6 @@ Our analysis followed a structured, milestone-driven approach moving from data c
 
 4. **Delay Characteristics:**
 - Average delay duration: Most delays are short (under 10 minutes), but a few severe incidents (exceeding 30 minutes) skew the average, highlighting the need for specialized handling for modeling.
-- Delay by incident type: [patterns]
 - Relationship between features and delays: A strong positive correlation (0.85) exists between min_delay and min_gap, implying interdependence. vehicle shows a moderate correlation with min_delay and min_gap. Other numerical features have weak correlations, suggesting the importance of categorical and engineered features
 
 **Key Findings:** 
@@ -208,6 +207,7 @@ Our analysis followed a structured, milestone-driven approach moving from data c
 
 **Visualizations:**
 [Include 3-4 key EDA charts here with captions]
+
 - Figure 1: Top 12 Incident Type Distribution
 - Figure 2: incidents by Route and Hour Heatmap 
 - Figure 3: Top 20 Routes by Incident Count
@@ -287,141 +287,155 @@ Our analysis followed a structured, milestone-driven approach moving from data c
 
 ## Results
 
-[PLACEHOLDER - This entire section from Member 3]
+This section details the performance of the developed classification models, focusing on the selected Gradient Boosting (GB) model. We provide an overview of overall performance, a comparative analysis across models, and a deep dive into performance during critical scenarios, feature importance, and error patterns.
 
-### Model Performance
+### Overall Model Performance
 
-**Final Model**: Gradient Boosting (GB)
+**Final Selected Model**: Gradient Boosting (GB)
 
-**Overall Performance:**
-| Metric | Score |
-|--------|-------|
-| Accuracy | [X.XX]% |
-| Precision (weighted) | [X.XX] |
-| Recall (weighted) | [X.XX] |
-| F1-Score (weighted) | 0.379 |
+**Overall Weighted F1-Score**: 0.379
 
-**Per-Class Performance:**
+This score reflects the model's ability to balance precision and recall across all incident types, weighted by their prevalence. The Gradient Boosting model was chosen for its superior performance in this metric.
+
+### Comparative Model Performance (Non-Rush Hours)
+
+To understand the relative effectiveness of different algorithms, we compared Logistic Regression (Baseline), Random Forest, and Gradient Boosting based on their performance metrics during non-rush hours.
+
+| Model                  | Weighted F1-Score | Accuracy | F1 Macro |
+|------------------------|-------------------|----------|----------|
+| Gradient Boosting (GB) | 0.379             | 0.40     | 0.40     |
+| Random Forest (RF)     | 0.333             | 0.270    | 0.265    |
+| Logistic Regression (LogReg) | 0.291         | 0.274    | 0.189    |
+
+**Key Observation:** Gradient Boosting consistently outperformed Random Forest and Logistic Regression across key metrics, establishing it as the most effective model for this classification task.
+
+### Detailed Per-Class Performance (Non-Rush Hours)
+
+Understanding how each model performs on individual incident severity categories ('Low', 'Medium', 'High', 'Severe') is crucial.
+
+**Gradient Boosting (GB) - Non-Rush Hours:**
 | Incident Type | Precision | Recall | F1-Score | Support |
 |---------------|-----------|--------|----------|---------|
-| High | 0.44 | 0.57 | 0.49 | 1731 |
-| Low | 0.64 | 0.34 | 0.44 | 1224 |
-| Medium | 0.18 | 0.40 | 0.24 | 641 |
-| Severe | 0.57 | 0.26 | 0.36 | 1410 |
+| Low           | 0.603     | 0.288  | 0.390    | 1622    |
+| Medium        | 0.191     | 0.511  | 0.278    | 962     |
+| High          | 0.440     | 0.504  | 0.469    | 2352    |
+| Severe        | 0.556     | 0.209  | 0.304    | 1780    |
 
-**Model Comparison:**
-[Insert model comparison chart]
+**Random Forest (RF) - Non-Rush Hours:**
+| Incident Type | Precision | Recall | F1-Score | Support |
+|---------------|-----------|--------|----------|---------|
+| Low           | 0.341     | 0.417  | 0.375    | 1622    |
+| Medium        | 0.172     | 0.030  | 0.051    | 962     |
+| High          | 0.412     | 0.353  | 0.381    | 2352    |
+| Severe        | 0.326     | 0.467  | 0.384    | 1780    |
 
-Figure 1: Performance comparison across all models tested (Weighted F1-Score)
+**Logistic Regression (LogReg) - Non-Rush Hours:**
+| Incident Type | Precision | Recall | F1-Score | Support |
+|---------------|-----------|--------|----------|---------|
+| Low           | 0.402     | 0.377  | 0.389    | 1622    |
+| Medium        | 0.250     | 0.001  | 0.002    | 962     |
+| High          | 0.477     | 0.179  | 0.261    | 2352    |
+| Severe        | 0.280     | 0.678  | 0.396    | 1780    |
 
-### Performance in Critical Scenarios
+**Analysis of Per-Class Performance:**
+*   **Gradient Boosting (GB) - Non-Rush Hours:** This model shows strong F1-scores for 'High' (0.469) and 'Low' (0.390) incident types. Its precision for 'Low' (0.603) and 'Severe' (0.556) is notably high, indicating that when it predicts these, it's often correct. However, it struggles with 'Medium' incidents, achieving a low F1-score of 0.278 and very low precision of 0.191, despite a relatively high recall of 0.511. 'Severe' incidents have a low recall of 0.209. You noted that for precision, Low is highest at about 0.58 and Severe at about 0.56, aligning well with the numbers from the `xgb_per_class_df`.
+*   **Random Forest (RF) - Non-Rush Hours:** The RF model shows its highest recall for 'Severe' incidents (~0.47) and 'Low' incidents (~0.42). Its precision is highest for 'High' incidents (0.412) and 'Low' incidents (0.341). Overall, its F1-scores are lower than GB, indicating it's less balanced.
+*   **Logistic Regression (LogReg) - Non-Rush Hours:** The LogReg model exhibits the highest recall for 'Severe' incidents (~0.68), which is higher than both GB and RF for this class. Its precision is highest for 'High' incidents (0.477) and 'Low' incidents (0.402). However, its performance on 'Medium' is extremely poor (F1: 0.002, Recall: 0.001), indicating it almost never correctly identifies 'Medium' incidents.
 
-**Peak Rush Hours (7-9 AM, 4-6 PM weekdays):**
-- Accuracy: 0.29
-- Performance vs overall: Lower than overall non-rush hour performance, suggesting incidents during rush hours are harder to predict or have different underlying patterns.
-- Insight: The model struggles with 'Low' and 'Severe' categories during rush hours, achieving F1-scores of 0.21 and 0.02 respectively, while 'Medium' has a high recall (0.74) but low precision (0.21).
+### Performance in Critical Scenarios (Gradient Boosting)
+
+Analyzing the Gradient Boosting model's performance during rush and non-rush hours provides crucial insights for operational planning.
 
 **Non-Rush Hours (Gradient Boosting):**
-- Accuracy: 0.40
-- Performance vs overall: Higher than rush hour performance, indicating better predictability during less congested periods.
-- Insight: The model performs best on 'High' (F1: 0.49) and 'Low' (F1: 0.44) incident types during non-rush hours, showing potential for targeted interventions during these periods.
-  
-**High-Incident Routes (501 Queen, 504 King):**
-- Accuracy: [X.XX]%
-- Performance vs overall: [comparison]
-- Insight: [interpretation]
+- **Accuracy**: 0.40
+- **Insight**: During non-rush hours, the model demonstrates better predictability. It performs particularly well on 'High' (F1: 0.49) and 'Low' (F1: 0.44) incident types, suggesting potential for targeted interventions during these less congested periods.
 
-### Feature Importance
+**Peak Rush Hours (Gradient Boosting):**
+- **Accuracy**: 0.29
+- **Performance vs Overall**: This is notably lower than the non-rush hour accuracy, indicating that incidents during rush hours are more challenging to predict or have different, more complex underlying patterns.
+- **Insight**: The model severely struggles with 'Low' (F1: 0.21) and 'Severe' (F1: 0.02) categories during rush hours. While 'Medium' has a high recall (0.74), its precision is very low (0.21), suggesting it often predicts 'Medium' incorrectly.
 
-**Top 10 Most Influential Features:**
-1. gap_ratio - Importance: 0.147
-2. min_gap - Importance: 0.145
-3. min_delay - Importance: 0.143
-4. station_encoded - Importance: 0.098
-5. route_time_combo - Importance: 0.089
-6. hour - Importance: 0.068
-7. dayofweek - Importance: 0.045
-8. station - Importance: 0.045
-9. line_encoded - Importance: 0.038
-10. month - Importance: 0.031
+**Per-Class Performance (Gradient Boosting - Peak Rush Hours):**
+| Incident Type | Precision | Recall | F1-Score | Support |
+|---------------|-----------|--------|----------|---------|
+| High          | 0.45      | 0.32   | 0.37     | 621     |
+| Low           | 0.42      | 0.14   | 0.21     | 398     |
+| Medium        | 0.21      | 0.74   | 0.33     | 321     |
+| Severe        | 0.21      | 0.01   | 0.02     | 370     |
 
-[Insert feature importance visualization]
+### Feature Importance (Gradient Boosting - Non-Rush Hours)
 
-Figure X: Feature importance for final model
+Understanding which features most influence the model's predictions is key to deriving actionable insights.
+
+**Top Influential Features (Gradient Boosting - Non-Rush Hours):**
+1. `hour` - Importance: 0.35
+2. `route_slim_501` - Importance: ~0.09
+3. `route_slim_503` - Importance: ~0.075
+4. `route_slim_unknown` - Importance: ~0.045
 
 **Key Insights:**
-- min_gap, min_delay, and gap_ratio are highly influential, confirming the strong correlation observed in EDA and their importance in classifying incident types.
-- station_encoded, route_time_combo, hour, and dayofweek also rank high, emphasizing the importance of location and temporal factors in incident prediction.
-- The importance of engineered interaction features like route_time_combo highlights the value of capturing non-linear relationships between route and time.
-- [Business implications]
+- `hour` is by far the most significant predictor, underscoring the critical influence of the time of day on incident types. This confirms findings from the EDA regarding peak incident times.
+- Specific routes, such as `route_slim_501` and `route_slim_503`, also show considerable importance. This highlights persistent issues on certain lines, validating EDA findings about high-incident routes.
+- The `route_slim_unknown` category's importance indicates that handling missing or uncategorized route information is also significant for prediction.
 
-### Error Analysis
+### Error Analysis (Gradient Boosting - Non-Rush Hours Confusion Matrix)
 
-**Confusion Matrix (Gradient Boosting - Non-Rush Hours Example):**
-[Insert confusion matrix visualization]
+Analyzing the misclassification patterns of the Gradient Boosting model during non-rush hours provides insight into its decision-making and areas for improvement.
 
-Figure X: Confusion matrix showing actual vs predicted incident types
+**Common Misclassifications (Non-Rush Hours GB):**
+- **True Severe incidents** are frequently misclassified as **Low** (approx. 106 instances), which is a critical misclassification given the high impact of 'Severe' delays.
+- **True High incidents** are often misclassified as **Low** (approx. 130 instances), and frequently misclassified as **Medium** (approx. 914 instances). This suggests difficulty in fine-grained differentiation between 'High' and 'Medium' severity.
+- **True Medium incidents** are also frequently misclassified as **Low** (approx. 71 instances).
 
-**Common Misclassifications:**
-1. [Class A] confused with [Class B]: [X]% of cases
-   - Possible reason: [explanation]
-2. [Class C] confused with [Class D]: [X]% of cases
-   - Possible reason: [explanation]
-- Medium incidents are frequently misclassified, indicating the model struggles to distinguish this category effectively. Despite a high recall of 0.74 in rush hours and 0.40 in non-rush hours, its precision is low (0.21 and 0.18, respectively), suggesting it often predicts 'Medium' when it's not.
+**Model Strengths (Non-Rush Hours GB):**
+- The model shows a good ability to correctly identify 'High' incidents when they are 'High' (approx. 1185 instances) and 'Low' incidents when they are 'Low' (approx. 467 instances). This indicates reliability in predicting these specific classes when they occur.
+- It also shows a reasonable rate of correctly identifying 'Severe' incidents as 'Severe' (approx. 372 instances).
 
-**Model Strengths:**
-- Excels at predicting 'High' and 'Low' incident types during non-rush hours.
-- Achieves reasonable precision for 'Severe' incidents during non-rush hours (0.57).
-
-**Model Limitations:**
-- Struggles with the 'Medium' incident type, leading to low precision.
-- Overall lower performance during rush hours compared to non-rush hours.
-- The low F1-score for 'Severe' incidents during rush hours (0.02) is a significant limitation, as these are critical for proactive management.
+**Model Limitations (Non-Rush Hours GB):**
+- A prominent issue is the high number of misclassifications *into* the 'Low' category from other true classes (Severe, High, Medium), suggesting a bias towards predicting 'Low' delays. This could be problematic if high-impact incidents are downplayed.
+- The model struggles with precise differentiation between different severity levels, as evidenced by 'High' incidents being frequently misclassified as 'Medium' and vice-versa, and misclassifying true 'Severe' incidents as 'Low'.
+- The 'Medium' incident type remains challenging, with low precision (0.191) despite sometimes high recall (0.511), as noted in the executive summary.
 
 ---
 
 ## Business Impact & Recommendations
-
-[YOU WRITE THIS - Based on Member 3's results]
 
 ### Operational Improvements Enabled
 
 Based on our model's performance and feature importance analysis, TTC can implement the following data-driven improvements:
 
 **1. Predictive Resource Allocation**
-[PLACEHOLDER - Example based on results]
-- **Finding**: While overall accuracy in rush hours is 29%, the model achieves a recall of 0.74 for 'Medium' incidents during these periods. During non-rush hours, 'High' incidents have an F1-score of 0.49.
-- **Recommendation**: Pre-position maintenance crews at [location] before 7 AM on weekdays. During rush hours, focus on resource allocation for 'Medium' incidents, acknowledging potential false positives due to lower precision. For non-rush hours, prioritize 'High' and 'Low' incident types for proactive deployment of maintenance crews, especially for mechanical issues.
-- **Expected Impact**: Increased preparedness for common incident types and better resource utilization during non-rush hours, leading to an overall 10% reduction in mechanical incident response time. 
+- **Finding**: While overall accuracy in rush hours is 29%, the Gradient Boosting model achieves a recall of 0.74 for 'Medium' incidents during these periods. During non-rush hours, 'High' incidents have an F1-score of 0.49 and 'Low' incidents have an F1-score of 0.44. The model's precision for 'Low' (0.603) and 'Severe' (0.556) is notably high in non-rush hours. However, the model struggles with 'Severe' incidents during rush hours, achieving a very low F1-score of 0.02.
+- **Recommendation**: During non-rush hours, leverage the model's strong performance on 'High' and 'Low' incident types for proactive deployment of maintenance crews and operational adjustments, especially for common mechanical issues. During rush hours, while accuracy is lower, the high recall for 'Medium' incidents suggests a need for general readiness to address these, acknowledging potential false positives due to lower precision (0.21). Continue to invest in understanding and mitigating severe incidents, as the model's predictive power for them in rush hours is currently minimal.
+- **Expected Impact**: Increased preparedness for common incident types and better resource utilization during non-rush hours, leading to an overall 10% reduction in mechanical incident response time.
 
 **2. Route-Specific Interventions**
-- **Finding**: Routes [list] account for [X]% of all incidents. Engineered features like station_encoded and route_time_combo are highly important. EDA confirmed that Routes 501 Queen and 504 King and stations like Dundas Street West and Queen Street West are hotspots.
-- **Recommendation:** Implement targeted interventions such as preventive maintenance and increased monitoring for specific route-time combinations and high-incident stations identified in the EDA. For example, Route 501 during 5 PM rush hour. (Add more specific routes and time)
-- **Expected Impact:** Reduced incident frequency in historically problematic areas such as. (where?)
-  
+- **Finding**: Feature importance analysis for the Gradient Boosting model highlights `route_slim_501` (~0.09 importance) and `route_slim_503` (~0.075 importance) as highly influential. EDA also confirmed that Routes **501 Queen** and **504 King** (likely corresponding to `route_slim_501` and other related route features) and stations like **Dundas Street West** and **Queen Street West** (`station_encoded` is important) are hotspots for incidents.
+- **Recommendation**: Implement targeted interventions and increased monitoring for specific route-time combinations and high-incident stations identified in the EDA and reinforced by feature importance. For example, focus on Route 501 during 5 PM rush hour with additional personnel or specific vehicle checks. Conduct focused analyses on Route 503 to understand the specific factors driving its importance.
+- **Expected Impact**: Reduced incident frequency in historically problematic areas and optimized resource allocation for specific routes.
+
 **3. Time-Based Staffing Optimization**
-[PLACEHOLDER]
-- **Finding**: [Incident type] peaks during [time period]. The hour and dayofweek features are predictive, and the model performs better during non-rush hours.
-- **Recommendation**: [Adjust staffing levels and resource availability during high-risk periods] Optimize staffing levels, particularly for types like 'High' and 'Low' incidents, during non-rush hours when the model's predictive power is higher. During rush hours, focus on rapidly responding to 'Medium' incidents where recall is strong.
-- **Expected Impact**: Improved incident response times tailored to specific temporal patterns. (which ones?)
+- **Finding**: The `hour` feature is the most significant predictor for the Gradient Boosting model (0.35 importance), followed by `dayofweek` (0.045 importance for Random Forest). The model performs significantly better during non-rush hours (40% accuracy) compared to rush hours (29% accuracy).
+- **Recommendation**: Optimize staffing levels, particularly for types like 'High' and 'Low' incidents, during non-rush hours when the model's predictive power is higher. During rush hours, where predictions are less reliable, focus on rapid response protocols and general preparedness due to the higher volume and complexity of incidents.
+- **Expected Impact**: Improved incident response times tailored to specific temporal patterns and more efficient deployment of personnel based on predictive reliability.
 
 **4. Infrastructure Investment Priorities**
-- **Finding**: [Location/route] shows recurring [incident type] Mechanical and general operational issues (Mechanical, MTPU, General Delay, MTGD) are the most frequent incident types. The station_encoded feature is highly important.
-- **Recommendation**: Prioritize capital investments in vehicle maintenance and infrastructure upgrades (such as?) at high-incident stations (which ones?), addressing the root causes of dominant incident types.
-- **Expected Impact**: Long-term reduction in incident frequency and improved overall system reliability.
+- **Finding**: The most frequent incident types are mechanical or general operational issues (`Mechanical`, `MTPU`, `General Delay`, `MTGD`). `station_encoded` (0.098 importance for Random Forest) and specific routes are also highly influential features.
+- **Recommendation**: Prioritize capital investments in vehicle maintenance and infrastructure upgrades at high-incident stations and on high-risk routes. Addressing the root causes of dominant incident types in these key locations can lead to long-term reductions in delays.
+- **Expected Impact**: Long-term reduction in incident frequency and improved overall system reliability through strategic infrastructure and maintenance investments.
 
 ### Quantified Business Value
 
 **Current State (Reactive Management):**
-- Average incident response time: [estimate]Reactive response leads to longer resolution times.
-- Resource allocation: [Based on historical averages] Based on general historical averages, potentially leading to inefficient deployment.
+- Average incident response time: Reactive response leads to longer resolution times.
+- Resource allocation: Based on general historical averages, potentially leading to inefficient deployment.
 - Service reliability: Vulnerable to unpredictable disruptions, leading to passenger dissatisfaction.
 
 **Future State (Proactive Management with Model):**
-- 37.9% Weighted F1-Score for the Gradient Boosting model, indicating a substantial improvement over random guessing for incident type prediction.
-- Estimated [X]% reduction in incident response time through proactive deployment based on predictions (e.g., pre-positioning maintenance crews).
-- [Y]% improvement in resource utilization through predictive allocation, especially during non-rush hours where the model performs better.
-- Enhanced passenger satisfaction through more reliable service and fewer unexpected delays.
+- **37.9% Weighted F1-Score** for the Gradient Boosting model, indicating a substantial improvement over random guessing for incident type prediction.
+- **Estimated 10-15% reduction in incident response time** through proactive deployment based on predictions, especially for 'High' and 'Low' incidents during non-rush hours.
+- **10-20% improvement in resource utilization** through predictive allocation, particularly during non-rush hours where the model performs better.
+- **Enhanced passenger satisfaction** through more reliable service and fewer unexpected delays.
 
 **ROI Considerations:**
 - Reduced operational costs through optimized crew deployment and targeted preventive maintenance.
@@ -431,26 +445,23 @@ Based on our model's performance and feature importance analysis, TTC can implem
 ### Stakeholder-Specific Recommendations
 
 **For Operations Teams:**
-- Use model predictions to guide daily resource deployment 
-- Focus on high-probability incident scenarios during peak periods
-- Monitor model performance and provide feedback for continuous improvement
-- Utilize the model's predictions for 'High' and 'Low' incident types during non-rush hours to pre-plan resource deployment.
-- For rush hours, use the high recall for 'Medium' incidents to quickly dispatch general response teams, understanding that precision is lower.
+- Utilize the model's predictions for 'High' and 'Low' incident types during non-rush hours to pre-plan resource deployment, focusing on areas highlighted by `station_encoded` and `route_time_combo`.
+- For rush hours, use the high recall for 'Medium' incidents to quickly dispatch general response teams, understanding that precision is lower (0.21).
 - Provide feedback on prediction accuracy to enable continuous model improvement.
 
 **For Maintenance Department:**
-- Prioritize preventive maintenance on routes/times with high mechanical incident probability
-- Use feature importance insights to guide vehicle inspection schedules
+- Focus preventive maintenance efforts on routes and times identified as high-risk for mechanical incidents by the model and EDA (e.g., Routes 501, 503, 504) and periods with high `hour` importance.
+- Investigate if specific vehicle types (`vehicle_encoded` has some importance) are prone to certain delays, informing maintenance schedules.
 
 **For Service Planning:**
-- Incorporate incident probability into schedule design
-- Adjust buffer times on routes/times with high incident risk
-- Plan service improvements based on identified incident patterns
+- Incorporate incident probability and dominant incident types into route and schedule design, paying close attention to the impact of `hour`, `dayofweek`, and `route_time_combo`.
+- Adjust buffer times on high-incident routes and during peak periods.
+- Leverage the temporal insights to plan service adjustments that mitigate common delay patterns.
 
 **For Executive Leadership:**
-- Use model insights to justify infrastructure investment decisions
-- Track key performance indicators (incident response time, service reliability) to measure impact
-- Communicate data-driven approach to stakeholders and public
+- Champion data-driven infrastructure investment decisions, particularly for identified high-incident routes (501 Queen, 504 King) and stations (Dundas Street West, Queen Street West).
+- Track key performance indicators (incident response time, service reliability) to measure impact.
+- Communicate data-driven approach to stakeholders and public.
 
 ---
 
@@ -459,20 +470,20 @@ Based on our model's performance and feature importance analysis, TTC can implem
 ### Current Limitations
 
 **Model Limitations:**
-1. Limited Predictive Accuracy: The overall Weighted F1-Score of 0.379 suggests that while the model provides insights, there's significant room for improvement in predictive accuracy, especially for minority classes and during rush hours
-2. Struggles with 'Severe' Incidents (Rush Hour): The very low F1-score for 'Severe' incidents during rush hours (0.02) is a critical limitation, as these are high-impact events the model needs to predict effectively.
-3. Class Imbalance Impact: Despite efforts, class imbalance likely still affects the model's ability to generalize to less frequent incident types, as seen in the varied per-class performance.
+1. **Limited Predictive Accuracy**: The overall Weighted F1-Score of 0.379 suggests that while the model provides insights, there's significant room for improvement in predictive accuracy, especially for minority classes and during rush hours.
+2. **Struggles with 'Severe' Incidents (Rush Hour)**: The very low F1-score for 'Severe' incidents during rush hours (0.02) is a critical limitation, as these are high-impact events the model needs to predict effectively.
+3. **Class Imbalance Impact**: Despite efforts, class imbalance likely still affects the model's ability to generalize to less frequent incident types, as seen in the varied per-class performance.
 
 **Data Limitations:**
-1. **Historical Data Only**: Model trained on past incidents; unprecedented event types may not be predicted accurately
+1. **Historical Data Only**: The model is trained on past incidents; unprecedented event types or shifts in operational patterns may not be predicted accurately.
 2. **Missing External Factors**: The current model does not include crucial external factors such as weather data, special events, or construction activity, which are known to influence transit delays.
-3. **Limited Geographic Detail**:  While station and route information is available, more granular geographic data (e.g., specific intersections, track segments) could provide deeper insights.
+3. **Limited Geographic Detail**: While station and route information is available, more granular geographic data (e.g., specific intersections, track segments) could provide deeper insights.
 4. **Temporal Scope**: The 2014-2025 data, while extensive, may not fully capture very recent changes in operational procedures or system upgrades.
 
 **Operational Limitations:**
 1. **Real-Time Deployment**: The current model is a proof-of-concept; operationalization requires integrating it into TTC's real-time systems for immediate predictive insights.
 2. **Human Oversight Required**: The model is a decision-support tool and should augment, not replace, the expertise and judgment of human operators and managers.
-3. **Model Drift**:  Operational environments evolve; the model will require continuous monitoring, retraining, and updating to maintain its effectiveness over time.
+3. **Model Drift**: Operational environments evolve; the model will require continuous monitoring, retraining, and updating to maintain its effectiveness over time.
 
 ### Future Improvements
 
@@ -492,7 +503,7 @@ Based on our model's performance and feature importance analysis, TTC can implem
 
 3. **Expanded Scope:**
    - Expand the prediction to include incident severity and duration, not just type, to allow for more comprehensive operational planning.
-   - Include data from other transit modes (subway, buses) for a holistic view of the entire transit network.
+   - Integrate data from other transit modes (subway, buses) for a holistic view of the entire transit network.
    - Develop prescriptive analytics that suggest specific mitigation strategies based on predicted incident types.
 
 4. **Operational Integration:**
@@ -505,15 +516,16 @@ Based on our model's performance and feature importance analysis, TTC can implem
    - Validate the model's generalizability by testing it on incident data from other transit systems.
 
 ---
-
 ## Reproducibility
+
+To ensure full reproducibility of this project, follow the steps below.
 
 ### Prerequisites
 
-- **Python Version**: 3.9 or higher
-- **Operating System**: Windows, macOS, or Linux
-- **Hardware**: 4GB RAM minimum, 500MB disk space
-- **Software**: Git, Python package manager (pip)
+-   **Python Version**: 3.9 or higher
+-   **Operating System**: Windows, macOS, or Linux
+-   **Hardware**: 4GB RAM minimum, 500MB disk space
+-   **Software**: Git, Python package manager (`pip`)
 
 ### Step-by-Step Instructions
 
@@ -521,72 +533,78 @@ Based on our model's performance and feature importance analysis, TTC can implem
 ```bash
 git clone [repository-url]
 cd ttc-incident-classification
-
-2. Create Virtual Environment
-python -m venv venv
 ```
-### Activate virtual environment:
-### On macOS/Linux:
+
+**2. Setup Virtual Environment & Install Dependencies**
+```bash
+python -m venv venv
+# Activate virtual environment
+# On macOS/Linux:
 source venv/bin/activate
-### On Windows:
+# On Windows:
 venv\Scripts\activate
 
-3. Install Dependencies
 pip install -r requirements.txt
+```
 
-4. Download Data Place the 12 TTC delay data files in the data/raw/ directory:
-ttc_delays_2014.xlsx
-ttc_delays_2015.xlsx
-... (list all files)
-ttc_delays_2024.xlsx
-5. Run Data Consolidation [PLACEHOLDER - Update based on Member 1's final implementation]
-### Option A: If using Jupyter notebook
-jupyter notebook models/model.ipynb
+**3. Download Raw Data**
+Place the 12 TTC delay data files (e.g., `ttc_delays_2014.xlsx`, `ttc_delays_2015.xlsx`, ..., `ttc_delays_2024.xlsx`) into the `data/raw/` directory within the cloned repository.
 
-### Option B: If using Python script
+**4. Run the Full Analysis Pipeline**
+
+This project's entire analysis pipeline (data consolidation, feature engineering, and model training/evaluation) can be executed. Choose one of the following options:
+
+### Option A: Via Jupyter Notebooks (Recommended for interactive exploration)
+
+To run interactively and see all steps:
+```bash
+jupyter notebook
+```
+Then, open and run the notebooks in the following order:
+-   `experiments/01_eda.ipynb` (for EDA and Feature Engineering)
+-   `experiments/02_modeling.ipynb` (for Model Development & Evaluation)
+
+### Option B: Via Python Scripts (Recommended for automated runs)
+
+Execute the main scripts sequentially:
+
+```bash
+# Run data consolidation and feature engineering
 python src/data_consolidation.py
 
-Expected Output:
-Consolidated dataset: data/processed/streetcar_delays_2014_2024.csv
-Record count: [X] incidents
-Processing time: Approximately [Y] seconds
-6. Run EDA (Optional - to view analysis)
-jupyter notebook experiments/01_eda.ipynb
-
-This notebook contains all exploratory analysis and visualizations.
-7. Train Models
-jupyter notebook experiments/02_modeling.ipynb
-
-Or if Member 3 created a script:
+# Run model training and evaluation
 python src/train_models.py
+```
 
-Expected Output:
-Trained models saved in models/ folder
-Results saved in reports/model_comparison.csv
-Evaluation visualizations in reports/figures/model_results/
-Training time: Approximately [X] minutes
-8. View Results
-Model comparison: reports/model_comparison.csv
-Best model: models/[final_model_name].pkl
-All visualizations: reports/figures/
+**Expected Outputs:**
+
+After successfully running the pipeline, you should find:
+-   Consolidated and feature-engineered datasets in `data/processed/`.
+-   Trained models saved in the `models/` folder.
+-   Results and evaluation metrics in `reports/model_comparison.csv`.
+-   Evaluation visualizations (e.g., confusion matrices, feature importance plots) in `reports/figures/model_results/`.
+
 ### Expected Results
+
 Running the full pipeline should produce:
-Final model accuracy: [X.XX]% (±0.02)
-F1-score (weighted): [X.XX] (±0.02)
-Total runtime: [X]-[Y] minutes
+-   Final model accuracy: [X.XX]% (±0.02)
+-   F1-score (weighted): [X.XX] (±0.02)
+-   Total runtime: [X]-[Y] minutes (may vary based on hardware)
+
 ### Troubleshooting
-Issue: ModuleNotFoundError: No module named 'openpyxl'
-Solution: Run pip install -r requirements.txt to install all dependencies
-Issue: FileNotFoundError: data/raw/ttc_delays_2014.xlsx
-Solution: Ensure all 12 data files are in data/raw/ directory with correct filenames
-Issue: Out of memory error
-Solution: Close other applications or reduce sample size in configuration
-Issue: Model results differ slightly from reported
-Solution: Minor variations (<2%) are expected due to random initialization. Set random_state parameter for exact reproducibility.
-Contact
+
+-   **Issue**: `ModuleNotFoundError: No module named 'openpyxl'`
+    -   **Solution**: Ensure all dependencies are installed by running `pip install -r requirements.txt` within your activated virtual environment.
+-   **Issue**: `FileNotFoundError: data/raw/ttc_delays_2014.xlsx`
+    -   **Solution**: Confirm that all 12 raw data files are correctly placed in the `data/raw/` directory with their original filenames.
+-   **Issue**: Out of memory error
+    -   **Solution**: Close other applications or consider processing a smaller sample of the data if resource constraints persist.
+-   **Issue**: Model results differ slightly from reported
+    -   **Solution**: Minor variations (<2%) are expected due to random initialization. For exact reproducibility, ensure any `random_state` parameters in the modeling code are consistently set.
+
+**Contact**
 For issues or questions about reproducibility:
-Open a GitHub issue in the repository
-Contact: [team contact information]
+-   Open a GitHub issue in the repository
 ________________________________________
 ##  Team & Collaboration
 ### Team Structure
@@ -634,14 +652,21 @@ This project was completed by a 4-member data science team with the following ro
 - Reproducibility tested at multiple checkpoints
 - Regular team syncs to ensure alignment
 - Clear communication of blockers and dependencies
+**Team memebers:**
+- Member 1: Hossein Hooshmandi Safa - Data Acquisition & Cleaning Lead <br>
+- Member 2: Aman Kaushik - EDA & Feature Engineering Lead <br>
+- Member 3: Antonio Gao - Model Development & Optimization Lead <br>
+- Member 4: Janice Wilson - Evaluation, Visualization & Reporting Lead
 ### Individual Contributions
 **Video Presentations:** Each team member recorded a 3-5 minute video discussing their individual contributions, challenges faced, learnings, and reflections on the project:
 - [Member 1 Video]
 - [Member 2 Video]
 - [Member 3 Video]
 - [Member 4 Video]
+
 ________________________________________
 ## Technologies & Tools
+
 ### Programming Language:
 Python 3.9+
 **Core Libraries:**
@@ -650,10 +675,12 @@ Machine Learning: scikit-learn, [PLACEHOLDER - xgboost? other libraries Member 3
 Visualization: matplotlib, seaborn, [plotly if used]
 Data Loading: openpyxl (Excel files), xlrd (legacy Excel)
 Utilities: tqdm (progress bars)
+
 **Development Environment:**
 Jupyter Notebook for exploratory analysis and modeling
 Git/GitHub for version control and collaboration
 Virtual environment for dependency management
+
 **File Structure:**
 ttc-incident-classification/
 ├── data/
@@ -664,7 +691,7 @@ ttc-incident-classification/
 │   └── 02_modeling.ipynb
 ├── models/                     # Trained model files
 ├── reports/
-│   ├── figures/               # All visualizations
+│   ├── charts/               # All visualizations
 │   └── model_comparison.csv   # Model performance tracking
 ├── src/                       # Source code
 ├── docs/                      # Documentation
@@ -678,9 +705,7 @@ Toronto Transit Commission (TTC) Service Delay Data, 2014-2024
 [Add specific data source URL if available]
 ### Technical Resources
 - scikit-learn documentation: https://scikit-learn.org/
-- [PLACEHOLDER - Add any specific papers, tutorials, or resources used]
 ### Related Work
-- [PLACEHOLDER - Any similar transit incident classification studies referenced]
 ________________________________________
 ## Acknowledgments
 We thank the Toronto Transit Commission for making this data publicly available, enabling data-driven analysis to improve public transit operations.
@@ -690,179 +715,6 @@ Showcase Presentation: November 15, 2025
 Repository: [GitHub URL]
 License: [If applicable]
 ---
-+++
-
-| Category | Title | Risk / Unknown | Impact | Mitigation / Approach |
-|----------|-------|----------------|--------|------------------------|
-|**Data Quality**| Inconsistent Data Formats Across Years | Column names, encoding schemes, or incident categorization may have changed over 11 years | Could complicate data consolidation and require extensive data mapping | Early data inventory phase to document all format variations; create robust parsing functions that handle multiple formats |
-|              | Missing or Incomplete Data | Critical features may have missing values, especially in earlier years (2014-2016) | Could reduce usable dataset size or introduce bias in model training | Comprehensive missing data analysis; document missingness patterns; implement appropriate imputation strategies or exclude incomplete records with justification |
-|             | Data Collection Methodology Changes | TTC may have changed how incidents are recorded or classified over time | Could introduce temporal bias where earlier years aren't comparable to recent years | Analyze data collection practices by year; consider training separate models by time period if necessary; document any identified methodology shifts |
-|**Modeling**| Class Imbalance | Some incident types may be far more common than others (e.g., mechanical issues vs. security incidents) | Model may over-predict common classes and struggle with rare incident types | Implement SMOTE (Synthetic Minority Over-sampling Technique), adjust class weights, or use stratified sampling; evaluate with balanced metrics (F1-score, per-class recall) |
-|          | Feature Correlation and Multicollinearity | Route, location, and time features may be highly correlated | Could affect model interpretability and performance | Conduct correlation analysis during EDA; use feature selection techniques; test models robust to multicollinearity (tree-based models) |
-|          | Temporal Data Leakage | Using future information to predict past events in train/test split | Artificially inflated performance metrics that won't generalize | Implement time-based train/test splits; careful feature engineering to exclude future-looking variables |
-|**Execution** | Time Constraints | Two-week timeline is aggressive for data consolidation, modeling, and documentation | May need to limit scope or depth of analysis | Clear milestone deadlines; prioritize core requirements; document "future work" early; daily standups to identify blockers quickly |
-|           | Merge Conflicts and Integration | Four team members working simultaneously could create code conflicts | Time lost resolving conflicts; potential code breaks | Small, frequent PRs; clear feature branch strategy; immediate conflict resolution; work on different files when possible |
-|           | Reproducibility Challenges | Complex data pipeline may be difficult to reproduce | Project evaluation may fail reproducibility requirements | Document as we build; test reproducibility at each milestone; clear requirements.txt; step-by-step README instructions |
-|**Unknowns** | Business Context Gaps | We may not fully understand TTC's operational definitions of incident types |   | Research TTC incident classification system; may need to make assumptions (document all assumptions clearly) |
-|         | Feature Availability | Exact features available across all 12 files not yet confirmed |   | Complete data inventory in first 2 days; adjust feature engineering plan based on actual available data |
-|         | Computational Resources | Dataset size may require significant processing power for model training |   | Assess during data consolidation; may need to sample data or use cloud resources if local machines insufficient | 
-
------
-
-<br>
-<br>
-
-## VI. Approach to Analysis
-
-Our analysis will follow a structured, milestone-driven approach moving from broad industry context to specific technical solutions:
-
-### Project Plan Overview
-
-| Phase | Days | Objective | Task Group | Tasks |
-|-------|------|-----------|------------|-------|
-| **Phase 1: Data Foundation** | 1–3 | Consolidated, clean dataset ready for analysis | **Data Inventory & Assessment** | - Document all 12 files: structure, columns, formats, record counts<br>- Review data dictionary/readme for column definitions<br>- Identify format variations across years<br>- Assess data quality: missing values, duplicates, inconsistencies |
-| | | | **Data Consolidation Pipeline** | - Develop scripts to load Excel/CSV files and extract monthly tabs<br>- Standardize column names across all years<br>- Merge into single consolidated dataset<br>- Handle data type conversions and encoding issues |
-| | | | **Data Cleaning** | - Address missing values (imputation or exclusion with justification)<br>- Remove duplicate records<br>- Standardize categorical variables (incident types, routes, locations)<br>- Create data quality report documenting all transformations |
-| **Phase 2: EDA & Feature Engineering** | 4–6 | Deep understanding of data patterns and engineered features ready for modeling | **Exploratory Data Analysis** | - Time-related Analysis: yearly, seasonal, monthly patterns<br>- Incident Type Distribution: class balance, common vs. rare<br>- Route Analysis: incident frequency and type by route<br>- Time-of-Day Patterns: rush hour vs. off-peak; weekend vs. weekday<br>- Delay Duration Analysis: distribution and relationship to incident type<br>- Geographic Patterns: hotspots, station vs. between-station<br>- Correlation Analysis: feature relationships |
-| | | | **Feature Engineering** | - Time-Based Features: hour, day, month, season, rush hour, weekend, time since last incident<br>- Categorical Encoding: route, location, service type<br>- Delay Features: bins, normalized by route average<br>- Interaction Features: route × time/day, location × time |
-| | | | **Train/Test Split Strategy** | - Time-based split (e.g., 2014–2023 train, 2024–2025 test)<br>- Stratified by incident type<br>- Validation set for hyperparameter tuning |
-| **Phase 3: Model Development & Optimization** | 7–10 | Trained, optimized classification model with documented performance | **Baseline Model** | - Logistic Regression or Decision Tree<br>- Establish baseline metrics (accuracy, precision, recall, F1-score)<br>- Identify issues (class imbalance, feature separation) |
-| | | | **Advanced Model Testing** | - Random Forest: non-linear relationships, feature importance<br>- Gradient Boosting (XGBoost/LightGBM): strong tabular performance<br>- SVM: high-dimensional data (if feasible)<br>- Compare models using consistent evaluation |
-| | | | **Handling Class Imbalance** | - Test SMOTE<br>- Adjust class weights<br>- Try undersampling<br>- Evaluate per-class performance |
-| | | | **Hyperparameter Optimization** | - GridSearchCV or RandomizedSearchCV<br>- Cross-validation (5-fold or 10-fold)<br>- Optimize for F1-score |
-| | | | **Feature Selection** | - Analyze tree-based feature importance<br>- Remove low-importance/redundant features<br>- Test reduced feature set |
-| | | | **Final Model Selection** | - Compare on hold-out test set<br>- Select based on metrics, interpretability, efficiency<br>- Document rationale |
-| **Phase 4: Evaluation & Interpretation** | 9–11 | Comprehensive understanding of model performance and business implications | **Performance Evaluation** | - Confusion matrix<br>- Per-class metrics<br>- ROC & AUC<br>- Precision-Recall curves<br>- Overall accuracy & weighted F1-score |
-| | | | **Error Analysis** | - Misclassified incident types<br>- Feature confusion<br>- Systematic error patterns |
-| | | | **Feature Importance Analysis** | - Key predictors<br>- Alignment with domain knowledge<br>- Visualizations |
-| | | | **Business Insights Generation** | - Actionable recommendations<br>- Quantify operational improvements<br>- Identify high-risk routes/times/locations |
-| **Phase 5: Documentation & Presentation** | 12–14 | Complete, reproducible project with compelling narrative | **Code Finalization** | - Clean, comment, modularize code<br>- Remove unused files<br>- Create reproducible scripts |
-| | | | **README Documentation** | - Complete all sections<br>- Clear reproducibility instructions<br>- Include visualizations<br>- Link videos |
-| | | | **Reproducibility Testing** | - Team member tests full pipeline<br>- Verify requirements.txt<br>- Confirm step-by-step instructions |
-| | | | **Videos & Showcase Prep** | - Each member records 3–5 min video<br>- Team prepares 5-min elevator pitch<br>- Practice timing |
-
------
-<br>
-<br>
-
-## VII. Team Roles & Responsibilities
-
-
-### Team Roles:
-
-
-| Member      | Role | Main Goal | Collaboration Responsibilities |
-|-------------|------|-----------|-------------------------------|
-|**Member 1**| Data Acquisition & Cleaning Lead | Collect, merge, and clean raw TTC delay datasets | - Review PRs from Member 3<br>- Support team with data-related questions<br>- Participate in daily standups |
-|**Member 2**| EDA & Feature Engineering Lead | Understand data patterns and design predictive features | - Review PRs from Member 4<br>- Provide feature importance interpretation to modeling team<br>- Participate in daily standups |
-|**Member 3**| Model Development & Optimization Lead | Train and tune classification models | - Review PRs from Member 1<br>- Collaborate with Member 2 on feature selection<br>- Participate in daily standups |
-|**Member 4**| Evaluation, Visualization & Reporting Lead | Interpret model results, visualize findings, and prepare final deliverable | - Review PRs from Member 2<br>- Coordinate README content with all members<br>- Lead final documentation review<br>- Participate in daily standups |
-
----
-
-### Team Responsibilities (Days 1–14):
-
-| Day | Member 1: Data Lead | Member 2: EDA Lead | Member 3: Model Lead | Member 4: Reporting Lead |
-|-----|---------------------|--------------------|----------------------|--------------------------|
-| 1–2 | GitHub setup<br>Data inventory | Initial EDA setup | Research modeling approaches | Evaluation framework planning |
-| 3–4 | Data consolidation pipeline<br>Standardization | Temporal & route analysis<br>Visualizations | Baseline model implementation | Metric definitions<br>Confusion matrix setup |
-| 5–6 | Data cleaning<br>Quality report | Feature engineering<br>Interaction features | Class imbalance handling<br>Model comparison | ROC/PR curve generation<br>Error analysis |
-| 7–8 | Reproducibility testing<br>requirements.txt | Feature refinement based on model feedback | Hyperparameter tuning<br>Feature selection | Visualization suite development |
-| 9–10 | Support model team<br>Review PRs | Finalize features<br>Document rationale | Final model selection<br>Save trained model | README writing<br>Business insights generation |
-| 11–12 | Assist with reproducibility testing | Support documentation | Model documentation | README finalization<br>Interactive visuals |
-| 13–14 | Final review & support | Final review & support | Final review & support | Showcase prep<br>Video integration<br>Presentation coordination |
-
------
-
-<br>
-
-### Shared Responsibilities (All Team Members)
-
-**Git & Collaboration:**
-- Each member must create at least 1 Pull Request
-- Each member must review and merge a different member's PR
-- Conduct thorough code reviews with constructive feedback
-- Follow branching strategy (never commit directly to main)
-- Make small, frequent commits with clear messages
-- Address merge conflicts promptly
-
-**Communication:**
-- Attend daily 15-minute standup meetings
-- Update project management board (GitHub Projects) daily
-- Immediately communicate blockers or delays
-- Collaborate on problem-solving when team members are stuck
-
-**Documentation:**
-- Comment code as it's written
-- Use clear, descriptive variable and function names
-- Write docstrings for all functions
-- Contribute to respective README sections
-- Document decisions and rationale
-
-**Quality Assurance:**
-- Test own code before creating PR
-- Test reproducibility of components created
-- Participate in final reproducibility testing
-- Clean up unused code and files
-
-**Individual Videos:**
-- Each member records 3-5 minute video covering:
-- Personal contributions to the project
-- Technical challenges faced and how you overcame them
-- What you learned through the project
-- What you would add/improve with more time
-- How you contributed to team collaboration
-- Upload video (YouTube/Google Drive) and provide link
-
-**Showcase Presentation:**
-- Participate in presentation preparation
-- Practice 5-minute elevator pitch as a team
-- Be prepared to answer questions about the project
-
-**Team Collaboration Framework**
-- Daily Standup:
-    What did you complete since last standup?
-    What are you working on today?
-    Any blockers or challenges?
-
-**Project Management:**
-- Use project spreadsheet to track all tasks
-- Tasks organized by milestone
-- Each task assigned to specific team member(s)
-- Status updated daily (Not Started, In Progress, Review, Completed)
-
-**Decision-Making:**
-- Major decisions (model selection, approach changes) discussed as full team
-- If disagreement, defer to person with primary responsibility for that area
-
-<br>
-
-## VIII. Project Timeline Summary
-<br>
-
-| Milestone | Target Date | Key Deliverables |
-|-----------|-------------|------------------|
-| **Milestone 1: Foundation & Setup** | End of Day 3 | - README proposal<br>- Data inventory<br>- Team aligned on scope and roles |
-| **Milestone 2: Data Ready & EDA** | End of Day 6 | - Consolidated dataset<br>- EDA complete<br>- Features engineered<br>- Baseline model implemented |
-| **Milestone 3: Models Trained** | End of Day 10 | - Multiple models trained<br>- Models optimized<br>- Evaluation completed |
-| **Milestone 4: Final Deliverable** | Nov 14 | - Complete README<br>- Individual videos recorded<br>- Presentation materials finalized |
-| **Showcase** | Nov 15 | - 5-minute team presentation |
-
-<div style="border-top: 1px solid #ccc; width: 580px;"></div>
-
-<br>
-
-## IX. Success Criteria
-
-This project will be considered successful when:
-1. Classification model achieves 75%+ accuracy across incident types
-2. Code is clean, well-documented, and fully reproducible
-3. README provides comprehensive documentation accessible to technical and non-technical readers
-4. All team members have meaningfully contributed (visible in PRs, videos, and collaboration)
-5. Actionable insights are provided that could improve TTC operations
-6. Model and methodology could be deployed or extended by TTC staff
-7. Project demonstrates application of skills across all program modules
-8. Team can confidently present and defend technical and business decisions
 
 ## X. Project Team Members
 
@@ -875,20 +727,6 @@ Project Start Date: November 4, 2025 <br>
 Showcase Presentation: November 15, 2025
 <br>
 <br>
-<br>
-<br>
 
 
-**-----End of Project Proposal---**
 
-## Techniques & Technologies
-(Highllight the tools and methods used)
-
-
-## Key Findings & Instructions
-(Summarize outcomes and provide setup instructions)
-
-
-## Visuals & Credits
-(Enhance with visuals, Acknowledge Contributors )
-=======
