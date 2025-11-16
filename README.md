@@ -398,9 +398,9 @@ Understanding which features most influence the model's predictions is key to de
 *Hour of the day dominates as the most predictive feature, followed by specific routes(501, 503)*
 
 **Key Insights:**
-- `hour` is by far the most significant predictor, underscoring the critical influence of the time of day on incident types. This confirms findings from the EDA regarding peak incident times.
-- Specific routes, such as `route_slim_501` and `route_slim_503`, also show considerable importance. This highlights persistent issues on certain lines, validating EDA findings about high-incident routes.
-- The `route_slim_unknown` category's importance indicates that handling missing or uncategorized route information is also significant for prediction.
+- hour is by far the most significant predictor, underscoring the critical influence of the time of day on incident types. This confirms findings from the EDA regarding peak incident times.
+- Specific routes, such as route_slim_501 and route_slim_503, also show considerable importance. This highlights persistent issues on certain lines, validating EDA findings about high-incident routes.
+- The route_slim_unknown category's importance indicates that handling missing or uncategorized route information is also significant for prediction.
 
 ### Error Analysis (Gradient Boosting - Non-Rush Hours Confusion Matrix)
 
@@ -411,18 +411,18 @@ Understanding which features most influence the model's predictions is key to de
 Analyzing the misclassification patterns of the Gradient Boosting model during non-rush hours provides insight into its decision-making and areas for improvement.
 
 **Common Misclassifications (Non-Rush Hours GB):**
-- **True Severe incidents** are frequently misclassified as **Low** (approx. 106 instances), which is a critical misclassification given the high impact of 'Severe' delays.
-- **True High incidents** are often misclassified as **Low** (approx. 130 instances), and frequently misclassified as **Medium** (approx. 914 instances). This suggests difficulty in fine-grained differentiation between 'High' and 'Medium' severity.
+- **True Severe incidents** are frequently misclassified as **Low** (approx. 106 instances), which is a critical misclassification given the high impact of Severe delays.
+- **True High incidents** are often misclassified as **Low** (approx. 130 instances), and frequently misclassified as **Medium** (approx. 914 instances). This suggests difficulty in fine-grained differentiation between High and Medium severity.
 - **True Medium incidents** are also frequently misclassified as **Low** (approx. 71 instances).
 
 **Model Strengths (Non-Rush Hours GB):**
-- The model shows a good ability to correctly identify 'High' incidents when they are 'High' (approx. 1185 instances) and 'Low' incidents when they are 'Low' (approx. 467 instances). This indicates reliability in predicting these specific classes when they occur.
-- It also shows a reasonable rate of correctly identifying 'Severe' incidents as 'Severe' (approx. 372 instances).
+- The model shows a good ability to correctly identify High incidents when they are High (approx. 1185 instances) and Low incidents when they are Low (approx. 467 instances). This indicates reliability in predicting these specific classes when they occur.
+- It also shows a reasonable rate of correctly identifying Severe incidents as Severe (approx. 372 instances).
 
 **Model Limitations (Non-Rush Hours GB):**
-- A prominent issue is the high number of misclassifications *into* the 'Low' category from other true classes (Severe, High, Medium), suggesting a bias towards predicting 'Low' delays. This could be problematic if high-impact incidents are downplayed.
-- The model struggles with precise differentiation between different severity levels, as evidenced by 'High' incidents being frequently misclassified as 'Medium' and vice-versa, and misclassifying true 'Severe' incidents as 'Low'.
-- The 'Medium' incident type remains challenging, with low precision (0.191) despite sometimes high recall (0.511), as noted in the executive summary.
+- A prominent issue is the high number of misclassifications *into* the Low category from other true classes (Severe, High, Medium), suggesting a bias towards predicting Low delays. This could be problematic if high-impact incidents are downplayed.
+- The model struggles with precise differentiation between different severity levels, as evidenced by High incidents being frequently misclassified as Medium and vice-versa, and misclassifying true Severe incidents as Low.
+- The Medium incident type remains challenging, with low precision (0.191) despite sometimes high recall (0.511), as noted in the executive summary.
 
 ---
 
@@ -433,7 +433,7 @@ Analyzing the misclassification patterns of the Gradient Boosting model during n
 Based on our model's performance and feature importance analysis, TTC can implement the following data-driven improvements:
 
 **1. Pattern-Based Resource Planning**
-- **Finding**: 'Hour of day' is the strongest predictor (0.35 importance), with incident peaks during early morning (5-7 AM) and early afternoon (2-4 PM) periods exceeding 5,000 incidents. The model achieves 40% accuracy overall, with particularly strong performance on 'High' (F1: 0.49) and 'Low' (F1: 0.39) severity incidents.
+- **Finding**: Hour of day is the strongest predictor (0.35 importance), with incident peaks during early morning (5-7 AM) and early afternoon (2-4 PM) periods exceeding 5,000 incidents. The model achieves 40% accuracy overall, with particularly strong performance on High (F1: 0.49) and Low (F1: 0.39) severity incidents.
 - **Recommendation**: Use identified temporal patterns to inform strategic resource planning and staffing allocation during high-incident periods (5-7 AM, 2-4 PM). While individual incident prediction accuracy is modest, the clear temporal patterns support data-driven scheduling and readiness protocols during these operationally critical windows.
 - **Expected Impact**: 5-10% improvement in operational readiness during identified high-incident periods through pattern-informed resource allocation.
 
@@ -691,6 +691,8 @@ This project was completed by a 4-member data science team with the following ro
 - Member 3: Antonio Gao - Model Development & Optimization Lead <br>
 - Member 4: Janice Wilson - Evaluation, Visualization & Reporting Lead
 ### Individual Contributions
+![Project Work Plan](https://docs.google.com/spreadsheets/d/1Vpyby2jPQb4QIXbrshjjSg4CN7f-Qj8X/edit?usp=drive_link&ouid=106879365394138724044&rtpof=true&sd=true)
+
 **Video Presentations:** Each team member recorded a 3-5 minute video discussing their individual contributions, challenges faced, learnings, and reflections on the project:
 - [Member 1 Video]
 - [Member 2 Video]
@@ -719,13 +721,10 @@ ttc-incident-classification/
 ├── data/ <br>
 │   ├── raw/                    # Original 12 data files <br>
 │   └── processed/              # Consolidated and processed data<br>
-├── experiments/                # Jupyter notebooks <br>
-│   ├── 01_eda.ipynb <br>
-│   └── 02_modeling.ipynb <br>
-├── models/                     # Trained model files <br>
+├── models/                     # modeling materials <br>
 ├── reports/ <br>
 │   ├── charts/               # All visualizations <br>
-│   └── model_comparison.csv   # Model performance tracking <br>
+│   └── presentation/          # Showcase materials <br>
 ├── src/                       # Source code <br>
 ├── docs/                      # Documentation <br>
 ├── requirements.txt           # Python dependencies <br>
@@ -743,10 +742,7 @@ ________________________________________
 ## XIII. Acknowledgments
 We thank the Toronto Transit Commission for making this data publicly available, enabling data-driven analysis to improve public transit operations.
 ________________________________________
-Project Timeline: [Start date] - November 4, 2025
-Showcase Presentation: November 15, 2025
-Repository: [GitHub URL]
-License: [If applicable]
+Project Timeline: Nov. 4 - 15, 2025
 ---
 
 <br>
