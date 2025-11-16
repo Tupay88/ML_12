@@ -691,7 +691,7 @@ This project was completed by a 4-member data science team with the following ro
 - Member 3: Antonio Gao - Model Development & Optimization Lead <br>
 - Member 4: Janice Wilson - Evaluation, Visualization & Reporting Lead
 ### Individual Contributions
-![Project Work Plan](https://docs.google.com/spreadsheets/d/1Vpyby2jPQb4QIXbrshjjSg4CN7f-Qj8X/edit?usp=drive_link&ouid=106879365394138724044&rtpof=true&sd=true)
+[Project Work Plan](https://docs.google.com/spreadsheets/d/1Vpyby2jPQb4QIXbrshjjSg4CN7f-Qj8X/edit?usp=drive_link&ouid=106879365394138724044&rtpof=true&sd=true)
 
 **Video Presentations:** Each team member recorded a 3-5 minute video discussing their individual contributions, challenges faced, learnings, and reflections on the project:
 - [Member 1 Video]
