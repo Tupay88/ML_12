@@ -696,7 +696,7 @@ This project was completed by a 4-member data science team with the following ro
 **Video Presentations:** Each team member recorded a 3-5 minute video discussing their individual contributions, challenges faced, learnings, and reflections on the project:
 - [Member 1 Video]
 - [Member 2 Video]
-- [Member 3 Video]
+- Antonio Gao
 - [Member 4 Video]
 
 ________________________________________
