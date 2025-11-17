@@ -25,14 +25,19 @@ models/
 │       - Saves confusion matrices, feature importance plots,
 │         per-class performance charts, and model comparison figure
 │
-├── model.ipynb
-│     Earlier / exploratory modeling notebook
-│     (kept for reference; ttc_modeling.ipynb is the final version)
+├── EDA and Feature Engineering-TTC Streetcar Dealy Project.ipynb
+│      Feature engineering notebook
+│     
 │
 ├── TTC_Streetcar_Delays_2014_2025.csv
 │     Intermediate combined file produced during development.
 │     Final, cleaned data lives in data/processed/ and data root.
 │
+|___ modeling output files:
+|    - xgb_per_class.csv
+|    - rf_per_class.csv 
+|    - baseline_per_class.csv
+|
 └── README.md
       This documentation file
 Main Notebook: ttc_modeling.ipynb
