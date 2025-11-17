@@ -684,12 +684,12 @@ This project was completed by a 4-member data science team with the following ro
 - Peer code reviews for all contributions
 - Reproducibility tested at multiple checkpoints
 - Regular team syncs to ensure alignment
-- Clear communication of blockers and dependencies
+- Clear communication of blockers and dependencies <br>
 **Team memebers:**
 - Member 1: Hossein Hooshmandi Safa - Data Acquisition & Cleaning Lead <br>
 - Member 2: Aman Kaushik - EDA & Feature Engineering Lead <br>
 - Member 3: Antonio Gao - Model Development & Optimization Lead <br>
-- Member 4: Janice Wilson - Evaluation, Visualization & Reporting Lead
+- Member 4: Janice Wilson - Evaluation & Reporting Lead
 ### Individual Contributions
 [Project Work Plan](https://docs.google.com/spreadsheets/d/1Vpyby2jPQb4QIXbrshjjSg4CN7f-Qj8X/edit?usp=drive_link&ouid=106879365394138724044&rtpof=true&sd=true)
 
@@ -697,7 +697,7 @@ This project was completed by a 4-member data science team with the following ro
 - [Hossein's  Video] : https://www.loom.com/share/67bff7f3a92a47c6bde8e84cd8cf565c
 - [Member 2 Video]
 - Antonio Gao
-- [Member 4 Video]
+- [Janice's Video]
 
 ________________________________________
 ## XI. Technologies & Tools
