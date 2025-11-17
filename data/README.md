@@ -24,6 +24,8 @@ data/
 │
 ├── TTC_Feature_Engineered_2014_2025.csv  # Final dataset used for modeling
 │
+|__ model.ipynb # notebook containing code that performed the data consolidation
+|
 └── README.md                             # Documentation for this data folder
 Data Source & Collection
 Source: Toronto Open Data Portal
