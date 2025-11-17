@@ -694,10 +694,10 @@ This project was completed by a 4-member data science team with the following ro
 [Project Work Plan](https://docs.google.com/spreadsheets/d/1Vpyby2jPQb4QIXbrshjjSg4CN7f-Qj8X/edit?usp=drive_link&ouid=106879365394138724044&rtpof=true&sd=true)
 
 **Video Presentations:** Each team member recorded a 3-5 minute video discussing their individual contributions, challenges faced, learnings, and reflections on the project:
-- [Hossein's  Video] : https://www.loom.com/share/67bff7f3a92a47c6bde8e84cd8cf565c
+- [Hossein's  Video](https://www.loom.com/share/67bff7f3a92a47c6bde8e84cd8cf565c)
 - [Member 2 Video]
 - Antonio Gao
-- [Janice's Video]
+- [Janice's Video](https://www.loom.com/share/b1dcd745b7a44f949e95dcd876318518)
 
 ________________________________________
 ## XI. Technologies & Tools
