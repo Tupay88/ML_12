@@ -695,7 +695,8 @@ This project was completed by a 4-member data science team with the following ro
 
 **Video Presentations:** Each team member recorded a 3-5 minute video discussing their individual contributions, challenges faced, learnings, and reflections on the project:
 - [Hossein's  Video](https://www.loom.com/share/67bff7f3a92a47c6bde8e84cd8cf565c)
-- [Member 2 Video]
+- Aman kaushik: - (https://www.loom.com/share/853bf8dd692e4cb39e7170b4d11c9f3b)
+
 - Antonio Gao
 - [Janice's Video](https://www.loom.com/share/b1dcd745b7a44f949e95dcd876318518)
 
